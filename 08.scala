@@ -42,18 +42,19 @@ class UnionFind[T] {
   def sets(): Iterable[mutable.HashSet[T]] = m.values.collect({ case Node.End(a) => a })
 }
 
-def p2(pos: List[(Int, Int, Int)], dists: List[(Long, ((Int, Int, Int), (Int, Int, Int)))]): Int =
+def p2(pos: List[(Int, Int, Int)], dists: List[(Long, ((Int, Int, Int), (Int, Int, Int)))]): Long =
   val merged = UnionFind[(Int, Int, Int)]()
   for (_, (a, b)) <- dists do {
     merged.merge(a, b)
     if merged.get(a)._2.size == pos.size then {
-      println((a, b))
-      return (a._1 * b._1)
+      return (a._1.toLong * b._1.toLong)
     }
   }
-  -1
+  -1l
 
 object Main05 extends App {
+  val t1 = System.nanoTime
+
   val pos = parse.toList.sorted
   val dists = 
       pos
@@ -68,4 +69,7 @@ object Main05 extends App {
   println(merged.sets().toList.map(_.size).sortBy(_ * -1).take(3).reduce((a, b) => a * b))
 
   println(p2(pos, dists))
+
+  val duration = (System.nanoTime - t1) / 1e9d
+  println(duration)
 }
